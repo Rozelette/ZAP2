@@ -10,6 +10,8 @@ Globals::Globals()
 	symbolMap = std::map <uint32_t, std::string>();
 	genSourceFile = true;
 	lastScene = nullptr;
+
+	game = ZGame::OOT;
 }
 
 void Globals::GenSymbolMap(std::string symbolMapPath)
@@ -24,5 +26,4 @@ void Globals::GenSymbolMap(std::string symbolMapPath)
 
 		symbolMap[addr] = symbolName;
 	}
-
 }

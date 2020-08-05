@@ -14,6 +14,7 @@ public:
 	ZFileMode fileMode;
 	std::string baseRomPath, inputPath, outputPath, cfgPath;
 	TextureType texType;
+	ZGame game;
 
 	ZRoom* lastScene;
 	std::map<uint32_t, std::string> symbolMap;

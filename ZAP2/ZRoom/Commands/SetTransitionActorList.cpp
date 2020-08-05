@@ -1,6 +1,6 @@
 #include "SetTransitionActorList.h"
+#include "../ZNames.h"
 #include "../ZRoom.h"
-#include "../ActorList.h"
 #include "../../BitConverter.h"
 
 using namespace std;
@@ -45,7 +45,7 @@ string SetTransitionActorList::GenerateSourceCodePass1(string roomName, int base
 
 	for (TransitionActorEntry* entry : transitionActors)
 	{
-		sprintf(line, "\t{ %i, %i, %i, %i, %s, %i, %i, %i, %i, 0x%04X }, \n", entry->frontObjectRoom, entry->frontTransitionReaction, entry->backObjectRoom, entry->backTransitionReaction, ActorList[entry->actorNum].c_str(), entry->posX, entry->posY, entry->posZ, entry->rotY, (uint16_t)entry->initVar);
+		sprintf(line, "\t{ %i, %i, %i, %i, %s, %i, %i, %i, %i, 0x%04X }, \n", entry->frontObjectRoom, entry->frontTransitionReaction, entry->backObjectRoom, entry->backTransitionReaction, ZNames::GetActorName(entry->actorNum).c_str(), entry->posX, entry->posY, entry->posZ, entry->rotY, (uint16_t)entry->initVar);
 		declaration += line;
 	}
 

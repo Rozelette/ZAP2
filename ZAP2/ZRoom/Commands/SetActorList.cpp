@@ -1,6 +1,6 @@
 #include "SetActorList.h"
+#include "../ZNames.h"
 #include "../ZRoom.h"
-#include "../ActorList.h"
 #include "../../BitConverter.h"
 #include "../../StringHelper.h"
 
@@ -62,8 +62,8 @@ string SetActorList::GenerateSourceCodePass2(string roomName, int baseAddress)
 	int index = 0;
 	for (ActorSpawnEntry* entry : actors)
 	{
-		if (entry->actorNum < sizeof(ActorList) / sizeof(ActorList[0]))
-			sprintf(line, "\t{ %s, %i, %i, %i, %i, %i, %i, 0x%04X }, //0x%08X \n", ActorList[entry->actorNum].c_str(), entry->posX, entry->posY, entry->posZ, entry->rotX, entry->rotY, entry->rotZ, (uint16_t)entry->initVar, segmentOffset + (index * 16));
+		if (entry->actorNum < ZNames::GetNumActors())
+			sprintf(line, "\t{ %s, %i, %i, %i, %i, %i, %i, 0x%04X }, //0x%08X \n", ZNames::GetActorName(entry->actorNum).c_str(), entry->posX, entry->posY, entry->posZ, entry->rotX, entry->rotY, entry->rotZ, (uint16_t)entry->initVar, segmentOffset + (index * 16));
 		else
 			sprintf(line, "\t{ 0x%04X, %i, %i, %i, %i, %i, %i, 0x%04X }, //0x%08X \n", entry->actorNum, entry->posX, entry->posY, entry->posZ, entry->rotX, entry->rotY, entry->rotZ, (uint16_t)entry->initVar, segmentOffset + (index * 16));
 
@@ -89,7 +89,7 @@ string SetActorList::GenerateExterns()
 	char line[2048];
 
 	sourceOutput += StringHelper::Sprintf("extern ActorEntry _%s_actorList_%08X[%i];\n", zRoom->GetName().c_str(), segmentOffset, actors.size());
-	
+
 	return sourceOutput;
 }
 

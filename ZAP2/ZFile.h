@@ -14,6 +14,12 @@ enum ZFileMode
 	Invalid
 };
 
+enum ZGame
+{
+	OOT,
+	MM
+};
+
 class ZFile
 {
 public:

@@ -159,6 +159,9 @@
     <ClCompile Include="OpenFBX\miniz.cpp">
       <Filter>Source Files\OpenFBX</Filter>
     </ClCompile>
+    <ClCompile Include="ZRoom\Commands\SetCutsceneCameraMM.cpp">
+      <Filter>Source Files\ZRoom\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tinyxml2.h">
@@ -335,6 +338,9 @@
     <ClInclude Include="Vec3s.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ZRoom\ZNames.h">
+      <Filter>Header Files\ZRoom</Filter>
+    </ClInclude>
     <ClInclude Include="TextTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -352,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="DisplayListBuilder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZRoom\Commands\SetCutsceneCameraMM.h">
+      <Filter>Header Files\ZRoom\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

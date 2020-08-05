@@ -1,5 +1,5 @@
 #include "SetRoomList.h"
-#include "../RoomList.h"
+#include "../ZNames.h"
 #include "../ZRoom.h"
 #include "../../BitConverter.h"
 
@@ -30,7 +30,7 @@ SetRoomList::SetRoomList(ZRoom* nZRoom, std::vector<uint8_t> rawData, int rawDat
 
 	for (RoomEntry* entry : rooms)
 	{
-		string roomName = RoomList[entry->virtualAddressStart];
+		string roomName = ZNames::GetRoomName(entry->virtualAddressStart);
 		sprintf(line, "\t{ (u32)_%sSegmentRomStart, (u32)_%sSegmentRomEnd },\n", roomName.c_str(), roomName.c_str());
 		declaration += line;
 	}

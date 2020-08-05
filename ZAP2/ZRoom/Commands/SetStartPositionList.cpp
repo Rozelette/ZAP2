@@ -1,6 +1,6 @@
 #include "SetStartPositionList.h"
+#include "../ZNames.h"
 #include "../ZRoom.h"
-#include "../ActorList.h"
 #include "../../BitConverter.h"
 
 using namespace std;
@@ -41,7 +41,7 @@ string SetStartPositionList::GenerateSourceCodePass1(string roomName, int baseAd
 
 	for (ActorSpawnEntry* entry : actors)
 	{
-		sprintf(line, "\t{ %s, %i, %i, %i, %i, %i, %i, 0x%04X },\n", ActorList[entry->actorNum].c_str(), entry->posX, entry->posY, entry->posZ, 
+		sprintf(line, "\t{ %s, %i, %i, %i, %i, %i, %i, 0x%04X },\n", ZNames::GetActorName(entry->actorNum).c_str(), entry->posX, entry->posY, entry->posZ,
 			entry->rotX, entry->rotY, entry->rotZ, entry->initVar);
 		declaration += line;
 	}

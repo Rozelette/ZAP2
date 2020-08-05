@@ -1,6 +1,6 @@
 #include "SetObjectList.h"
+#include "../ZNames.h"
 #include "../ZRoom.h"
-#include "../ObjectList.h"
 #include "../../BitConverter.h"
 
 using namespace std;
@@ -51,7 +51,7 @@ string SetObjectList::GenerateSourceCodePass1(string roomName, int baseAddress)
 
 	for (uint16_t objectIndex : objects)
 	{
-		sprintf(line, "\t%s,\n", ObjectList[objectIndex].c_str());
+		sprintf(line, "\t%s,\n", ZNames::GetObjectName(objectIndex).c_str());
 		declaration += line;
 	}
 

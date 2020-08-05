@@ -1,8 +1,8 @@
 #include <algorithm>
+#include "ZNames.h"
 #include "ZRoom.h"
 #include "ZCutscene.h"
 #include "../ZBlob.h"
-#include "ObjectList.h"
 #include "../File.h"
 #include "../StringHelper.h"
 #include "Commands/SetRoomList.h"
@@ -29,6 +29,7 @@
 #include "Commands/Unused09.h"
 #include "Commands/SetCutscenes.h"
 #include "Commands/EndMarker.h"
+#include "Commands/SetCutsceneCameraMM.h"
 
 using namespace std;
 using namespace tinyxml2;
@@ -51,7 +52,7 @@ ZRoom::ZRoom(XMLElement* reader, vector<uint8_t> nRawData, int rawDataIndex, str
 		if (string(child->Name()) == "DListHint")
 		{
 			string comment = "";
-			
+
 			if (child->Attribute("Comment") != NULL)
 				comment = "// " + string(child->Attribute("Comment")) + "\n";
 
@@ -153,37 +154,73 @@ void ZRoom::ParseCommands(std::vector<ZRoomCommand*>& commandList, CommandSet co
 
 	while (shouldContinue)
 	{
-		RoomCommand opcode = (RoomCommand)rawData[rawDataIndex]; 
+		RoomCommand opcode = (RoomCommand)rawData[rawDataIndex];
 
 		ZRoomCommand* cmd = nullptr;
 
-		switch (opcode)
+		if (Globals::Instance->game == ZGame::OOT)
 		{
-		case RoomCommand::SetStartPositionList: cmd = new SetStartPositionList(this, rawData, rawDataIndex); break; // 0x00
-		case RoomCommand::SetActorList: cmd = new SetActorList(this, rawData, rawDataIndex); break; // 0x01
-		case RoomCommand::SetCollisionHeader: cmd = new SetCollisionHeader(this, rawData, rawDataIndex); break; // 0x03
-		case RoomCommand::SetRoomList: cmd = new SetRoomList(this, rawData, rawDataIndex); break; // 0x04
-		case RoomCommand::SetWind: cmd = new SetWind(this, rawData, rawDataIndex); break; // 0x05
-		case RoomCommand::SetEntranceList: cmd = new SetEntranceList(this, rawData, rawDataIndex); break; // 0x06
-		case RoomCommand::SetSpecialObjects: cmd = new SetSpecialObjects(this, rawData, rawDataIndex); break; // 0x07
-		case RoomCommand::SetRoomBehavior: cmd = new SetRoomBehavior(this, rawData, rawDataIndex); break; // 0x08
-		case RoomCommand::Unused09: cmd = new Unused09(this, rawData, rawDataIndex); break; // 0x09
-		case RoomCommand::SetMesh: cmd = new SetMesh(this, rawData, rawDataIndex); break; // 0x0A
-		case RoomCommand::SetObjectList: cmd = new SetObjectList(this, rawData, rawDataIndex); break; // 0x0B
-		case RoomCommand::SetPathways: cmd = new SetPathways(this, rawData, rawDataIndex); break; // 0x0D
-		case RoomCommand::SetTransitionActorList: cmd = new SetTransitionActorList(this, rawData, rawDataIndex); break; // 0x0E
-		case RoomCommand::SetLightingSettings: cmd = new SetLightingSettings(this, rawData, rawDataIndex); break; // 0x0F
-		case RoomCommand::SetTimeSettings: cmd = new SetTimeSettings(this, rawData, rawDataIndex); break; // 0x10
-		case RoomCommand::SetSkyboxSettings: cmd = new SetSkyboxSettings(this, rawData, rawDataIndex); break; // 0x11
-		case RoomCommand::SetSkyboxModifier: cmd = new SetSkyboxModifier(this, rawData, rawDataIndex); break; // 0x12
-		case RoomCommand::SetExitList: cmd = new SetExitList(this, rawData, rawDataIndex); break; // 0x13
-		case RoomCommand::EndMarker: cmd = new EndMarker(this, rawData, rawDataIndex); break; // 0x14
-		case RoomCommand::SetSoundSettings: cmd = new SetSoundSettings(this, rawData, rawDataIndex); break; // 0x15
-		case RoomCommand::SetEchoSettings: cmd = new SetEchoSettings(this, rawData, rawDataIndex); break; // 0x16
-		case RoomCommand::SetCutscenes: cmd = new SetCutscenes(this, rawData, rawDataIndex); break; // 0x17
-		case RoomCommand::SetAlternateHeaders: cmd = new SetAlternateHeaders(this, rawData, rawDataIndex); break; // 0x18
-		case RoomCommand::SetCameraSettings: cmd = new SetCameraSettings(this, rawData, rawDataIndex); break; // 0x19
-		default: cmd = new ZRoomCommand(this, rawData, rawDataIndex);
+			switch (opcode)
+			{
+			case RoomCommand::SetStartPositionList: cmd = new SetStartPositionList(this, rawData, rawDataIndex); break; // 0x00
+			case RoomCommand::SetActorList: cmd = new SetActorList(this, rawData, rawDataIndex); break; // 0x01
+			case RoomCommand::SetCollisionHeader: cmd = new SetCollisionHeader(this, rawData, rawDataIndex); break; // 0x03
+			case RoomCommand::SetRoomList: cmd = new SetRoomList(this, rawData, rawDataIndex); break; // 0x04
+			case RoomCommand::SetWind: cmd = new SetWind(this, rawData, rawDataIndex); break; // 0x05
+			case RoomCommand::SetEntranceList: cmd = new SetEntranceList(this, rawData, rawDataIndex); break; // 0x06
+			case RoomCommand::SetSpecialObjects: cmd = new SetSpecialObjects(this, rawData, rawDataIndex); break; // 0x07
+			case RoomCommand::SetRoomBehavior: cmd = new SetRoomBehavior(this, rawData, rawDataIndex); break; // 0x08
+			case RoomCommand::Unused09: cmd = new Unused09(this, rawData, rawDataIndex); break; // 0x09
+			case RoomCommand::SetMesh: cmd = new SetMesh(this, rawData, rawDataIndex); break; // 0x0A
+			case RoomCommand::SetObjectList: cmd = new SetObjectList(this, rawData, rawDataIndex); break; // 0x0B
+			case RoomCommand::SetPathways: cmd = new SetPathways(this, rawData, rawDataIndex); break; // 0x0D
+			case RoomCommand::SetTransitionActorList: cmd = new SetTransitionActorList(this, rawData, rawDataIndex); break; // 0x0E
+			case RoomCommand::SetLightingSettings: cmd = new SetLightingSettings(this, rawData, rawDataIndex); break; // 0x0F
+			case RoomCommand::SetTimeSettings: cmd = new SetTimeSettings(this, rawData, rawDataIndex); break; // 0x10
+			case RoomCommand::SetSkyboxSettings: cmd = new SetSkyboxSettings(this, rawData, rawDataIndex); break; // 0x11
+			case RoomCommand::SetSkyboxModifier: cmd = new SetSkyboxModifier(this, rawData, rawDataIndex); break; // 0x12
+			case RoomCommand::SetExitList: cmd = new SetExitList(this, rawData, rawDataIndex); break; // 0x13
+			case RoomCommand::EndMarker: cmd = new EndMarker(this, rawData, rawDataIndex); break; // 0x14
+			case RoomCommand::SetSoundSettings: cmd = new SetSoundSettings(this, rawData, rawDataIndex); break; // 0x15
+			case RoomCommand::SetEchoSettings: cmd = new SetEchoSettings(this, rawData, rawDataIndex); break; // 0x16
+			case RoomCommand::SetCutscenes: cmd = new SetCutscenes(this, rawData, rawDataIndex); break; // 0x17
+			case RoomCommand::SetAlternateHeaders: cmd = new SetAlternateHeaders(this, rawData, rawDataIndex); break; // 0x18
+			case RoomCommand::SetCameraSettings: cmd = new SetCameraSettings(this, rawData, rawDataIndex); break; // 0x19
+			default: cmd = new ZRoomCommand(this, rawData, rawDataIndex);
+			}
+		}
+		else
+		{
+			switch (opcode)
+			{
+			case RoomCommand::SetStartPositionList: cmd = new SetStartPositionList(this, rawData, rawDataIndex); break; // 0x00
+			case RoomCommand::SetActorList: cmd = new SetActorList(this, rawData, rawDataIndex); break; // 0x01
+			case RoomCommand::SetCutsceneCameraMM: cmd = new SetCutsceneCameraMM(this, rawData, rawDataIndex); break; // 0x01
+			case RoomCommand::SetCollisionHeader: cmd = new SetCollisionHeader(this, rawData, rawDataIndex); break; // 0x03
+			case RoomCommand::SetRoomList: cmd = new SetRoomList(this, rawData, rawDataIndex); break; // 0x04
+			case RoomCommand::SetWind: cmd = new SetWind(this, rawData, rawDataIndex); break; // 0x05
+			case RoomCommand::SetEntranceList: cmd = new SetEntranceList(this, rawData, rawDataIndex); break; // 0x06
+			case RoomCommand::SetSpecialObjects: cmd = new SetSpecialObjects(this, rawData, rawDataIndex); break; // 0x07
+			case RoomCommand::SetRoomBehavior: cmd = new SetRoomBehavior(this, rawData, rawDataIndex); break; // 0x08
+			case RoomCommand::Unused09: cmd = new Unused09(this, rawData, rawDataIndex); break; // 0x09
+			case RoomCommand::SetMesh: cmd = new SetMesh(this, rawData, rawDataIndex); break; // 0x0A
+			case RoomCommand::SetObjectList: cmd = new SetObjectList(this, rawData, rawDataIndex); break; // 0x0B
+			case RoomCommand::SetPathways: cmd = new SetPathways(this, rawData, rawDataIndex); break; // 0x0D
+			case RoomCommand::SetTransitionActorList: cmd = new SetTransitionActorList(this, rawData, rawDataIndex); break; // 0x0E
+			case RoomCommand::SetLightingSettings: cmd = new SetLightingSettings(this, rawData, rawDataIndex); break; // 0x0F
+			case RoomCommand::SetTimeSettings: cmd = new SetTimeSettings(this, rawData, rawDataIndex); break; // 0x10
+			case RoomCommand::SetSkyboxSettings: cmd = new SetSkyboxSettings(this, rawData, rawDataIndex); break; // 0x11
+			case RoomCommand::SetSkyboxModifier: cmd = new SetSkyboxModifier(this, rawData, rawDataIndex); break; // 0x12
+			case RoomCommand::SetExitList: cmd = new SetExitList(this, rawData, rawDataIndex); break; // 0x13
+			case RoomCommand::EndMarker: cmd = new EndMarker(this, rawData, rawDataIndex); break; // 0x14
+			case RoomCommand::SetSoundSettings: cmd = new SetSoundSettings(this, rawData, rawDataIndex); break; // 0x15
+			case RoomCommand::SetEchoSettings: cmd = new SetEchoSettings(this, rawData, rawDataIndex); break; // 0x16
+			//case RoomCommand::SetCutscenes: cmd = new SetCutscenes(this, rawData, rawDataIndex); break; // 0x17
+			case RoomCommand::SetCutscenes: cmd = new EndMarker(this, rawData, rawDataIndex); break; // 0x17
+			case RoomCommand::SetAlternateHeaders: cmd = new SetAlternateHeaders(this, rawData, rawDataIndex); break; // 0x18
+			case RoomCommand::SetCameraSettings: cmd = new SetCameraSettings(this, rawData, rawDataIndex); break; // 0x19
+			default: cmd = new ZRoomCommand(this, rawData, rawDataIndex);
+			}
 		}
 
 		//printf("OP: %s\n", cmd->GetCommandCName().c_str());
@@ -324,7 +361,7 @@ string ZRoom::GetSourceOutputHeader(string prefix)
 {
 	char line[2048];
 	sourceOutput = "";
-	
+
 	for (ZRoomCommand* cmd : commands)
 		sourceOutput += cmd->GenerateExterns();
 
@@ -361,7 +398,7 @@ string ZRoom::GetSourceOutputCode(std::string prefix)
 	sourceOutput += "#include <variables.h>\n";
 
 	sourceOutput += StringHelper::Sprintf("#include \"%s.h\"\n", name.c_str());
-	
+
 	if (scene != nullptr)
 	{
 		sourceOutput += StringHelper::Sprintf("#include \"%s.h\"\n", scene->GetName().c_str());
@@ -423,8 +460,8 @@ string ZRoom::GetSourceOutputCode(std::string prefix)
 	vector<pair<int32_t, Declaration*>> declarationKeysSorted(declarations.begin(), declarations.end());
 
 	// Sort the vector according to the word count in descending order.
-	sort(declarationKeysSorted.begin(), declarationKeysSorted.end(), [](const auto& lhs, const auto& rhs) 
-	{ 
+	sort(declarationKeysSorted.begin(), declarationKeysSorted.end(), [](const auto& lhs, const auto& rhs)
+	{
 		return lhs.first < rhs.first;
 	});
 
@@ -435,7 +472,12 @@ string ZRoom::GetSourceOutputCode(std::string prefix)
 
 	for (pair<int32_t, Declaration*> item : declarationKeysSorted)
 	{
-		while (declarations[item.first]->size % 4 != 0)
+		int alignment = (item.second->alignment == DeclarationAlignment::Align16) ? 16 :
+			            (item.second->alignment == DeclarationAlignment::Align8) ? 8 :
+			            (item.second->alignment == DeclarationAlignment::Align4) ? 4 :
+			            1;
+
+		while (declarations[item.first]->size % alignment != 0)
 		{
 			declarations[item.first]->size++;
 		}

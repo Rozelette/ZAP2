@@ -298,7 +298,7 @@ CameraData::CameraData(ZRoom* zRoom, std::vector<uint8_t> rawData, int rawDataIn
 
 	declaration = "";
 
-	//if (numCameras > 0)
+	if (numCameras > 0)
 	{
 		sprintf(line, "CamPosDataEntry _%s_camPosDataEntries_%08X[] = \n{\n", zRoom->GetName().c_str(), rawDataIndex + 8);
 		declaration += line;

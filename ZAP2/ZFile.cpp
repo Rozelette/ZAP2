@@ -45,6 +45,15 @@ void ZFile::ParseXML(ZFileMode mode, XMLElement* reader)
 {
 	name = reader->Attribute("Name");
 
+	const char* game = reader->Attribute("Game");
+	if (game != nullptr)
+	{
+		if (string(game) == "MM")
+			Globals::Instance->game = ZGame::MM;
+		else
+			Globals::Instance->game = ZGame::OOT;
+	}
+
 	string folderName = basePath + "/" + Path::GetFileNameWithoutExtension(name);
 	
 	vector<uint8_t> rawData;

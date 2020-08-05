@@ -11,7 +11,7 @@ enum class RoomCommand : uint8_t
 {
 	SetStartPositionList = 0x00,
 	SetActorList = 0x01,
-	SetCameraSomething = 0x02,
+	SetCutsceneCameraMM = 0x02,
 	SetCollisionHeader = 0x03,
 	SetRoomList = 0x04,
 	SetWind = 0x05,
